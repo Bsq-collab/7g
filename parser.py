@@ -47,7 +47,7 @@ See the file script for an example of the file format
 """
 ARG_COMMANDS = [ 'line', 'scale', 'move', 'rotate', 'save', 'circle', 'bezier', 'hermite', 'box', 'sphere', 'torus' ]
 
-def parse_file( fname, edges, transform, screen, color ):
+def parse_file( fname, edges, polygons, transform, screen, color, ):
 
     f = open(fname)
     lines = f.readlines()
@@ -79,7 +79,7 @@ def parse_file( fname, edges, transform, screen, color ):
 
         elif line == 'box':
             #print 'BOX\t' + str(args)
-            add_box(edges,
+            add_box(polygons,
                     float(args[0]), float(args[1]), float(args[2]),
                     float(args[3]), float(args[4]), float(args[5]))
 
@@ -129,17 +129,17 @@ def parse_file( fname, edges, transform, screen, color ):
                 
         elif line == 'clear':
             edges = []
-            
+            polygons=[]
         elif line == 'ident':
             ident(transform)
 
         elif line == 'apply':
             matrix_mult( transform, edges )
-
+            matrix_mult(transform, polygons)
         elif line == 'display' or line == 'save':
             clear_screen(screen)
             draw_lines(edges, screen, color)
-
+            draw_polygons(polygons,screen,color)
             if line == 'display':
                 display(screen)
             else:
